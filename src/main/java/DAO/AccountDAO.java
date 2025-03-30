@@ -63,6 +63,32 @@ public class AccountDAO {
     }
 
     /**
+     * Return the account with the given id if it exists,
+     * or null if it does not.
+     * 
+     * @param account_id
+     * @return account with given account_id if it exists, otherwise null
+     */
+    public Account getAccountById(int account_id) {
+        Connection connection = ConnectionUtil.getConnection();
+        String checkSql = "SELECT * FROM account WHERE account_id=?";
+
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(checkSql);
+            preparedStatement.setInt(1, account_id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                return new Account(resultSet.getInt("account_id"),
+                                   resultSet.getString("username"),
+                                   resultSet.getString("password"));
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return null;
+    }
+
+    /**
      * Check whether a registered account exists with a username and password
      * matching the given account. If so, return the full account including
      * account ID, otherwise, return false.

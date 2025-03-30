@@ -3,7 +3,7 @@ package Controller;
 import Model.Account;
 import Model.Message;
 import Service.AccountService;
-// import Service.MessageService;
+import Service.MessageService;
 
 import io.javalin.Javalin;
 import io.javalin.http.Context;
@@ -17,10 +17,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
  */
 public class SocialMediaController {
     private AccountService accountService;
-    // private MessageService messageService;
+    private MessageService messageService;
 
     public SocialMediaController() {
         accountService = new AccountService();
+        messageService = new MessageService();
     }
     /**
      * In order for the test cases to work, you will need to write the endpoints in the startAPI() method, as the test
@@ -33,6 +34,7 @@ public class SocialMediaController {
 
         app.post("register", this::registerHandler);
         app.post("login", this::loginHandler);
+        app.post("messages", this::postMessageHandler);
 
         return app;
     }
@@ -45,10 +47,6 @@ public class SocialMediaController {
         context.json("sample text");
     }
 
-    /**
-     * This is an example handler for an example endpoint.
-     * @param context The Javalin Context object manages information about both the HTTP request and response.
-     */
     private void registerHandler(Context ctx) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         Account account = mapper.readValue(ctx.body(), Account.class);
@@ -68,6 +66,17 @@ public class SocialMediaController {
             ctx.json(mapper.writeValueAsString(foundAccount));
         } else {
             ctx.status(401);
+        }
+    }
+
+    private void postMessageHandler(Context ctx) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        Message message = mapper.readValue(ctx.body(), Message.class);
+        Message postedMessage = messageService.createMessage(message);
+        if (postedMessage != null) {
+            ctx.json(mapper.writeValueAsString(postedMessage));
+        } else {
+            ctx.status(400);
         }
     }
 }
