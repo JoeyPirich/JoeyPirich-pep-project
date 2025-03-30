@@ -36,4 +36,8 @@ public class AccountService {
             return null;
         }
     }
+
+    public Account verifyLogin(Account account) {
+        return accountDAO.verifyLogin(account);
+    }
 }

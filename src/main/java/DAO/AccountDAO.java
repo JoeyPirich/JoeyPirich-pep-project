@@ -61,4 +61,32 @@ public class AccountDAO {
         }
         return false;
     }
+
+    /**
+     * Check whether a registered account exists with a username and password
+     * matching the given account. If so, return the full account including
+     * account ID, otherwise, return false.
+     * 
+     * @param account
+     * @return account if found, otherwise null
+     */
+    public Account verifyLogin(Account account) {
+        Connection connection = ConnectionUtil.getConnection();
+        String sql = "SELECT * FROM account WHERE username=? AND password=?";
+
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, account.getUsername());
+            preparedStatement.setString(2, account.getPassword());
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                return new Account(resultSet.getInt("account_id"),
+                                   resultSet.getString("username"),
+                                   resultSet.getString("password"));
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return null;
+    }
 }
