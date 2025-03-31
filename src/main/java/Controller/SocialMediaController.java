@@ -5,6 +5,7 @@ import Model.Message;
 import Service.AccountService;
 import Service.MessageService;
 
+import java.util.List;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -35,6 +36,8 @@ public class SocialMediaController {
         app.post("register", this::registerHandler);
         app.post("login", this::loginHandler);
         app.post("messages", this::postMessageHandler);
+        app.get("messages", this::getAllMessagesHandler);
+        app.get("messages/{message_id}", this::getMessageByIdHandler);
 
         return app;
     }
@@ -77,6 +80,21 @@ public class SocialMediaController {
             ctx.json(mapper.writeValueAsString(postedMessage));
         } else {
             ctx.status(400);
+        }
+    }
+
+    private void getAllMessagesHandler(Context ctx) throws JsonProcessingException {
+        List<Message> messages = messageService.getAllMessages();
+        if (messages != null) {
+            ctx.json((new ObjectMapper()).writeValueAsString(messages));
+        }
+    }
+
+    private void getMessageByIdHandler(Context ctx) throws JsonProcessingException {
+        Message message = messageService.getMessageById(Integer.parseInt(ctx.pathParam("message_id")));
+        if (message != null) {
+            ObjectMapper mapper = new ObjectMapper();
+            ctx.json(mapper.writeValueAsString(message));
         }
     }
 }

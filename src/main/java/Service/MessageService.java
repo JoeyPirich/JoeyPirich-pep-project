@@ -7,6 +7,8 @@ import static org.mockito.ArgumentMatchers.anyFloat;
 import DAO.AccountDAO;
 import DAO.MessageDAO;
 
+import java.util.List;
+
 public class MessageService {
     private AccountDAO accountDAO;
     private MessageDAO messageDAO;
@@ -33,5 +35,24 @@ public class MessageService {
         } else {
             return null;
         }
+    }
+
+    /**
+     * Provides a list of all messages in the database
+     * 
+     * @return list of messages, or null in case of failure
+     */
+    public List<Message> getAllMessages() {
+        return messageDAO.getAllMessages();
+    }
+
+    /**
+     * Provides the message with the given ID if it is in the database,
+     * or null otherwise
+     * @param messageId
+     * @return message with ID if present, else null
+     */
+    public Message getMessageById(int messageId) {
+        return messageDAO.getMessageById(messageId);
     }
 }
