@@ -84,7 +84,12 @@ public class MessageService {
             Message message = this.getMessageById(messageId);
             if (message != null) {
                 if (messageDAO.editMessageWithId(messageId, messageText)) {
-                    return new Message(messageId, message.getPosted_by(), messageText, message.getTime_posted_epoch());
+                    return new Message(
+                        messageId,
+                        message.getPosted_by(),
+                        messageText,
+                        message.getTime_posted_epoch()
+                    );
                 }
             }
         }

@@ -17,9 +17,9 @@ public class AccountDAO {
      */
     public Account insertAccount(Account account) {
         Connection connection = ConnectionUtil.getConnection();
+        String sql = "INSERT INTO account (username, password) VALUES (?, ?)";
         
         try {
-            String sql = "INSERT INTO account (username, password) VALUES (?, ?)";
             PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
             preparedStatement.setString(1, account.getUsername());
@@ -29,7 +29,6 @@ public class AccountDAO {
 
             ResultSet pkeyResultSet = preparedStatement.getGeneratedKeys();
             if (pkeyResultSet.next()) {
-                // TODO: maybe should be `int generatedAccountId = (int) pkeyResultSet.getLong(1);`?
                 int generatedAccountId = pkeyResultSet.getInt(1);
                 return new Account(generatedAccountId, account.getUsername(), account.getPassword());
             }

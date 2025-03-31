@@ -12,9 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 /**
- * TODO: You will need to write your own endpoints and handlers for your controller. The endpoints you will need can be
- * found in readme.md as well as the test cases. You should
- * refer to prior mini-project labs and lecture materials for guidance on how a controller may be built.
+ * Controller for social media blog API
  */
 public class SocialMediaController {
     private AccountService accountService;
@@ -53,6 +51,15 @@ public class SocialMediaController {
         context.json("sample text");
     }
 
+    /**
+     * Handler for account registration.
+     * Register the account represented in the request body.
+     * The response will have the added account in the response body and status
+     * code 200 if successful, or status code 400 otherwise.
+     * 
+     * @param ctx contains JSON Account in its body
+     * @throws JsonProcessingException
+     */
     private void registerHandler(Context ctx) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         Account account = mapper.readValue(ctx.body(), Account.class);
@@ -64,6 +71,14 @@ public class SocialMediaController {
         }
     }
 
+    /**
+     * Handler for verifying login credentials.
+     * Response will contain the corresponding account in its body with status
+     * code 200 if login successful, otherwise gives status code 401.
+     * 
+     * @param ctx contains JSON Account in its body
+     * @throws JsonProcessingException
+     */
     private void loginHandler(Context ctx) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         Account account = mapper.readValue(ctx.body(), Account.class);
@@ -75,6 +90,14 @@ public class SocialMediaController {
         }
     }
 
+    /**
+     * Handler for posting a new message.
+     * Response body contains the new message in its body with status code 200
+     * if successful, otherwise gives status code 400.
+     * 
+     * @param ctx contains JSON message in its body
+     * @throws JsonProcessingException
+     */
     private void postMessageHandler(Context ctx) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         Message message = mapper.readValue(ctx.body(), Message.class);
@@ -86,6 +109,13 @@ public class SocialMediaController {
         }
     }
 
+    /**
+     * Handler for retrieving all messages.
+     * Response body contains a list of all messages with a status code of 200.
+     * 
+     * @param ctx
+     * @throws JsonProcessingException
+     */
     private void getAllMessagesHandler(Context ctx) throws JsonProcessingException {
         List<Message> messages = messageService.getAllMessages();
         if (messages != null) {
@@ -93,6 +123,13 @@ public class SocialMediaController {
         }
     }
 
+    /**
+     * Handler for retrieving a message by its ID.
+     * Response body contains a the message if found with status code 200.
+     * 
+     * @param ctx contains "message_id" path param
+     * @throws JsonProcessingException
+     */
     private void getMessageByIdHandler(Context ctx) throws JsonProcessingException {
         Message message = messageService.getMessageById(Integer.parseInt(ctx.pathParam("message_id")));
         if (message != null) {
@@ -101,6 +138,14 @@ public class SocialMediaController {
         }
     }
 
+    /**
+     * Handler for deleting a message with the given ID.
+     * Response body contains the deleted message if deletion successful, with
+     * status code 200.
+     * 
+     * @param ctx contains "message_id" path param
+     * @throws JsonProcessingException
+     */
     private void deleteMessageWithIdHandler(Context ctx) throws JsonProcessingException {
         Message message = messageService.deleteMessageWithId(Integer.parseInt(ctx.pathParam("message_id")));
         if (message != null) {
@@ -109,6 +154,14 @@ public class SocialMediaController {
         }
     }
 
+    /**
+     * Handler to edit the message text of an existing message with the given ID.
+     * Response body contains the edited message with status code 200 if
+     * successful, otherwise gives status code 400.
+     * 
+     * @param ctx contains "message_id" path param and new message test JSON in body
+     * @throws JsonProcessingException
+     */
     private void patchMessageWithIdHandler(Context ctx) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         Message message = messageService.editMessageWithId(
@@ -121,6 +174,14 @@ public class SocialMediaController {
         }
     }
 
+    /**
+     * Handler to retrieve all messages posted by a given user.
+     * Response body contains the list of all messages posted by the user with
+     * status code 200.
+     * 
+     * @param ctx contains "account_id" path param
+     * @throws JsonProcessingException
+     */
     private void getAllMessagesByUserHandler(Context ctx) throws JsonProcessingException {
         List<Message> messages = messageService.getAllMessagesByUser(Integer.parseInt(ctx.pathParam("account_id")));
         if (messages != null) {
