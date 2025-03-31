@@ -112,4 +112,27 @@ public class MessageDAO {
         }
         return false;
     }
+
+    /**
+     * Patch the message with the given ID to have the given message text.
+     * Returns true if the SQL executes successfully, false otherwise.
+     * 
+     * @param message_id
+     * @param message_text
+     * @return true in case of successful execution, false in case of exception
+     */
+    public boolean editMessageWithId(int message_id, String message_text) {
+        Connection connection = ConnectionUtil.getConnection();
+        String sql = "UPDATE message SET message_text=? WHERE message_id=?";
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, message_text);
+            preparedStatement.setInt(2, message_id);
+            preparedStatement.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return false;
+    }
 }

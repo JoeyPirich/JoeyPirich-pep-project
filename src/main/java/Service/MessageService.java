@@ -69,4 +69,25 @@ public class MessageService {
         }
         return message;
     }
+
+    /**
+     * Edits the message with the given ID to have the given text. Returns the
+     * edited messsage if successful, otherwise returns null (if ID not found,
+     * the message is not within 1-255 characters, or an exception occurs)
+     * 
+     * @param messageId
+     * @param messageText
+     * @return edited message if successful, otherwise null
+     */
+    public Message editMessageWithId(int messageId, String messageText) {
+        if (!messageText.isEmpty() && messageText.length() <= 0xFF) {
+            Message message = this.getMessageById(messageId);
+            if (message != null) {
+                if (messageDAO.editMessageWithId(messageId, messageText)) {
+                    return new Message(messageId, message.getPosted_by(), messageText, message.getTime_posted_epoch());
+                }
+            }
+        }
+        return null;
+    }
 }
