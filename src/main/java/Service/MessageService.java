@@ -90,4 +90,13 @@ public class MessageService {
         }
         return null;
     }
+
+    /**
+     * Returns a list of all messages posted by a user with a given ID
+     * @param postedBy
+     * @return list of messages, or null in case of exception
+     */
+    public List<Message> getAllMessagesByUser(int postedBy) {
+        return messageDAO.getAllMessagesByUser(postedBy);
+    }
 }

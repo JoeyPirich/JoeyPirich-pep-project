@@ -135,4 +135,30 @@ public class MessageDAO {
         }
         return false;
     }
+
+    /**
+     * Returns a list of all messages posted by a user with a given ID
+     * @param posted_by
+     * @return list of messages, or null in case of exception
+     */
+    public List<Message> getAllMessagesByUser(int posted_by) {
+        Connection connection = ConnectionUtil.getConnection();
+        String sql = "SELECT * FROM message WHERE posted_by=?";
+        List<Message> messages = new ArrayList<>();
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, posted_by);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                messages.add(new Message(resultSet.getInt("message_id"),
+                                         resultSet.getInt("posted_by"),
+                                         resultSet.getString("message_text"),
+                                         resultSet.getLong("time_posted_epoch")));
+            }
+            return messages;
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return null;
+    }
 }
