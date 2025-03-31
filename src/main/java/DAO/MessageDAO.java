@@ -91,4 +91,25 @@ public class MessageDAO {
         }
         return null;
     }
+
+    /**
+     * Delete the message with the given ID. Returns true if the operation
+     * executes without error, or false otherwise.
+     * 
+     * @param message_id
+     * @return true if no executed successfully, false in case of exception
+     */
+    public boolean deleteMessageWithId(int message_id) {
+        Connection connection = ConnectionUtil.getConnection();
+        String sql = "DELETE FROM message WHERE message_id=?";
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, message_id);
+            preparedStatement.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return false;
+    }
 }
